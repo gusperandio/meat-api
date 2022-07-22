@@ -1,0 +1,25 @@
+{
+  "name": "api-red-eyes",
+  "version": "1.0.0",
+  "description": "Red Eyes Revolution",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/restify": "8.5.4",
+    "bcrypt": "5.0.1",
+    "mongoose": "6.4.4",
+    "restify": "8.6.1",
+    "restify-errors": "8.0.2"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "5.0.0",
+    "@types/mongoose": "5.11.97",
+    "@types/restify-errors": "4.3.4",
+    "@types/verror": "1.10.5"
+  }
+}

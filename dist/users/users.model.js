@@ -44,6 +44,9 @@ const userSchema = new mongoose.Schema({
         }
     }
 });
+userSchema.statics.findByEmail = function (email) {
+    return this.findOne({ email });
+};
 const hashPassword = (obj, next) => {
     //todo O segundo parametro SALTROUNDS é um numero inteiro, faz a criptografia pela quantidade passada, nesse exemplo, criptografa 10 vezes
     bcrypt.hash(obj.password, environment_1.environment.security.saltRounds).then(hash => {

@@ -9,6 +9,10 @@ export interface User extends mongoose.Document{
   password: string
 }
 
+export interface UserModel extends mongoose.Model<User>{
+  findByEmail(email: string): Promise<User>
+}
+
 //* SELECT = Se será exibido esse campo
 //* REQUIRED = Se é obrigatório informar esse campo
 //* MAXLENGTH = Quantidade máxima de caracteres
@@ -50,6 +54,10 @@ const userSchema = new mongoose.Schema({
   }
 })
 
+userSchema.statics.findByEmail = function(email: string){
+  return this.findOne({email})
+}
+
 const hashPassword = (obj, next) =>{
   //todo O segundo parametro SALTROUNDS é um numero inteiro, faz a criptografia pela quantidade passada, nesse exemplo, criptografa 10 vezes
   bcrypt.hash(obj.password, environment.security.saltRounds).then(hash=>{
@@ -81,4 +89,4 @@ userSchema.pre('findOneAndUpdate', updateMiddleware)
 
 userSchema.pre('update', updateMiddleware)
 
-export const User = mongoose.model<User>('User', userSchema)
+export const User = mongoose.model<User, UserModel>('User', userSchema)

@@ -2,13 +2,19 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.reviewsRouter = void 0;
 const model_router_1 = require("../common/model-router");
-const review_model_1 = require("./review.model");
+const reviews_model_1 = require("./reviews.model");
 class ReviewsRouter extends model_router_1.ModelRouter {
     constructor() {
-        super(review_model_1.Review);
+        super(reviews_model_1.Review);
     }
     prepareOne(query) {
         return query.populate("user", "name").populate("restaurant", "name");
+    }
+    envelope(document) {
+        let resource = super.envelope(document);
+        const restId = document.restaurant._id ? document.restaurant._id : document.restaurant;
+        resource._links.restaurant = `/restaurants/${restId}`;
+        return resource;
     }
     /*findById = (req, resp, next) => {
       this.model
@@ -19,9 +25,9 @@ class ReviewsRouter extends model_router_1.ModelRouter {
         .catch(next);
     };*/
     applyRoutes(application) {
-        application.get("/reviews", this.findAll);
-        application.get("/reviews/:id", [this.validateId, this.findById]);
-        application.post("/reviews", this.save);
+        application.get(`${this.basePath}`, this.findAll);
+        application.get(`${this.basePath}/:id`, [this.validateId, this.findById]);
+        application.post(`${this.basePath}`, this.save);
     }
 }
 exports.reviewsRouter = new ReviewsRouter();

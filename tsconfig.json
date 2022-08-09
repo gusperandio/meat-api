@@ -1,10 +1,11 @@
 {
     "compilerOptions": {
-        "outDir": "dist",
-        "target": "ES2022",
-        "module": "commonjs"
+      "outDir": "dist",
+      "target": "es2015",
+      "module": "commonjs",
+      "typeRoots": ["./types", "./node_modules/@types"]
     },
-    "exclude": [
-        "**/*.test.ts"
-    ]
-}
+    "exclude": ["**/*.test.ts", "node_modules", "typings"]
+  }
+
+  

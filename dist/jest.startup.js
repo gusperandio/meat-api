@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const restaurants_model_1 = require("./restaurants/restaurants.model");
 const jestCli = require("jest-cli");
 const reviews_model_1 = require("./reviews/reviews.model");
 const reviews_router_1 = require("./reviews/reviews.router");
@@ -15,7 +16,16 @@ const beforeAllTest = () => {
     return server
         .bootstrap([users_router_1.usersRouter, reviews_router_1.reviewsRouter])
         .then(() => users_model_1.User.remove({}).exec())
-        .then(() => reviews_model_1.Review.remove({}).exec());
+        .then(() => {
+        let admin = new users_model_1.User();
+        admin.name = 'admin';
+        admin.email = 'gustavo.sperandio25@gmail.com';
+        admin.password = '123456';
+        admin.profiles = ['admin', 'user'];
+        return admin.save();
+    })
+        .then(() => reviews_model_1.Review.remove({}).exec())
+        .then(() => restaurants_model_1.Restaurant.remove({}).exec());
 };
 const afterAllTests = () => {
     return server.shutdown();

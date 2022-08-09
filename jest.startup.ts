@@ -1,3 +1,4 @@
+import { Restaurant } from './restaurants/restaurants.model';
 import * as jestCli from 'jest-cli'
 import { Review } from './reviews/reviews.model';
 import { reviewsRouter } from './reviews/reviews.router';
@@ -14,7 +15,16 @@ const beforeAllTest = () => {
   return server
     .bootstrap([usersRouter, reviewsRouter])
     .then(() => User.remove({}).exec())
+    .then(()=>{
+      let admin = new User()
+      admin.name = 'admin'
+      admin.email = 'gustavo.sperandio25@gmail.com'
+      admin.password = '123456'
+      admin.profiles = ['admin', 'user']
+      return admin.save()
+    })
     .then(() => Review.remove({}).exec())
+    .then(() => Restaurant.remove({}).exec())
 };
 
 const afterAllTests = () => {

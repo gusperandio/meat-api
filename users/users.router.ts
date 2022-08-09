@@ -1,6 +1,8 @@
+import { authorize } from "./../security/authz.handler";
 import * as restify from "restify";
 import { User } from "./users.model";
 import { ModelRouter } from "../common/model-router";
+import { authenticate } from "../security/auth.handler";
 
 class UsersRouter extends ModelRouter<User> {
   constructor() {
@@ -14,11 +16,13 @@ class UsersRouter extends ModelRouter<User> {
   findByEmail = (req, resp, next) => {
     if (req.query.email) {
       User.findByEmail(req.query.email)
-        .then(user => user ? [user] : [] )
-        .then(this.renderAll(resp, next, {
+        .then((user) => (user ? [user] : []))
+        .then(
+          this.renderAll(resp, next, {
             pageSize: this.pageSize,
-            url: req.url
-        }))
+            url: req.url,
+          })
+        )
         .catch(next);
     } else {
       next();
@@ -32,11 +36,28 @@ class UsersRouter extends ModelRouter<User> {
     ]);
     // application.get({ path: "/users", version: "1.0.0" }, this.findAll);
     application.get(`${this.basePath}/:id`, [this.validateId, this.findById]);
-    application.post(`${this.basePath}`, this.save);
+    application.post(`${this.basePath}`, [this.save]);
     application.put(`${this.basePath}/:id`, [this.validateId, this.replace]);
     application.patch(`${this.basePath}/:id`, [this.validateId, this.update]);
     application.del(`${this.basePath}/:id`, [this.validateId, this.delete]);
+    application.post(`${this.basePath}/authenticate`, authenticate);
 
+
+
+    // application.get({ path: `${this.basePath}`, version: "2.0.0" }, [
+    //   this.findByEmail,
+    //   this.findAll,
+    // ]);
+    // application.get({ path: "/users", version: "1.0.0" }, this.findAll);
+    // application.get(`${this.basePath}/:id`, [authorize("admin"), this.validateId, this.findById]);
+    // application.post(`${this.basePath}`, [authorize("admin", "user"), this.save]);
+    // application.put(`${this.basePath}/:id`, [authorize("admin", "user"), this.validateId, this.replace]);
+    // application.patch(`${this.basePath}/:id`, [authorize("admin", "user"), this.validateId, this.update]);
+    // application.del(`${this.basePath}/:id`, [authorize("admin", "user"), this.validateId, this.delete]);
+    // application.post(`${this.basePath}/authenticate`, authenticate);
+    
+    
+    
     //! metodo sem o reuso de rotas
     // application.get("/users", (req, resp, next) => {
     //   User.find().then((users) => {
